@@ -1,0 +1,210 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+					x:Class="BookShop.BookShopViewModel">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Common.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+	<!-- BooksList -->
+    <Button x:Key="ShowBookForm_Add" x:Name="ShowBookForm" Tag="Add" Background="{StaticResource GreenButtonBackground}" 
+		Click="ShowBookForm_Add_Click"
+		PreviewMouseLeftButtonDown="AddBook_MouseLeftButtonDown" PreviewMouseLeftButtonUp="AddBook_MouseLeftButtonUp">
+		<StackPanel>
+			<Image Source="E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\plus.png" Stretch="Fill" Height="48"/>
+		</StackPanel>
+	</Button>
+    <ListBox x:Key="BooksList" x:Name="BooksListN" MouseDoubleClick="BooksList_MouseDoubleClick" IsVisibleChanged="BooksList_VisibleChanged"
+		HorizontalAlignment="Center" Width="700" Margin="50 50">
+		<ListBox.ItemContainerStyle>
+			<Style TargetType="ListBoxItem">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+						<Setter Property="Background" Value="YellowGreen"/>
+					</Trigger>
+				</Style.Triggers>
+			</Style>
+		</ListBox.ItemContainerStyle>
+		<ListBox.Template>
+			<ControlTemplate>
+				<DockPanel>
+					<Grid DockPanel.Dock="Top">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="250"/>
+							<ColumnDefinition Width="120"/>
+							<ColumnDefinition Width="100"/>
+							<ColumnDefinition Width="100"/>
+						</Grid.ColumnDefinitions>
+						<Label Grid.Column="0">Tytuł</Label>
+						<Label Grid.Column="1">Autor</Label>
+						<Label Grid.Column="2">Gatunek</Label>
+					</Grid>
+					<ItemsPresenter/>
+				</DockPanel>
+			</ControlTemplate>
+		</ListBox.Template>
+
+		<ListBox.ItemTemplate>
+			<DataTemplate>
+				<Grid VerticalAlignment="Center">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="250"/>
+						<ColumnDefinition Width="120"/>
+						<ColumnDefinition Width="100"/>
+						<ColumnDefinition Width="40"/>
+						<ColumnDefinition Width="40"/>
+					</Grid.ColumnDefinitions>
+					<TextBlock Grid.Column="0" Text="{Binding Title}"  Width="250" VerticalAlignment="Center"/>
+					<TextBlock Grid.Column="1" Text="{Binding Author}"  Width="120" VerticalAlignment="Center"/>
+					<TextBlock Grid.Column="2" Text="{Binding Genre}" Width="100" VerticalAlignment="Center"/>
+                    <Button Grid.Column="3" x:Name="ShowBookForm" Width="40" Height="40" Background="{StaticResource WhiteButtonBackground}"
+							Click="ShowBookForm_Edit_Click"
+							PreviewMouseLeftButtonDown="EditBook_MouseLeftButtonDown" PreviewMouseLeftButtonUp="EditBook_MouseLeftButtonUp">
+						<StackPanel>
+							<Image Source="E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\edit.png" Stretch="Fill" Height="30"/>
+						</StackPanel>
+					</Button>
+					<Button Grid.Column="4" x:Name="DeleteBook" Width="40" Height="40" Background="{StaticResource RedButtonBackground}"
+							Click="DeleteBook_Click" 
+							PreviewMouseLeftButtonDown="DeleteBook_MouseLeftButtonDown" PreviewMouseLeftButtonUp="DeleteBook_MouseLeftButtonUp">
+						<StackPanel>
+							<Image Source="E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\delete.png" Stretch="Fill" Height="30"/>
+						</StackPanel>
+					</Button>
+				</Grid>
+			</DataTemplate>
+		</ListBox.ItemTemplate>
+	</ListBox>
+	<!-- BookDetails -->
+    <ListBox x:Key="BookDetails" Width="500" Height="250"
+		SelectionChanged="BookDetails_SelectionChanged" MouseRightButtonUp="BookDetails_MouseRightButtonUp" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListBox.ItemTemplate>
+			<DataTemplate>
+				<Grid Width="500" Height="250" x:Name="lb_it_g">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width=".2*"/>
+						<ColumnDefinition Width=".8*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height=".4*"/>
+						<RowDefinition Height=".1*"/>
+					</Grid.RowDefinitions>
+					<StackPanel Grid.Column="0">
+                        <TextBlock Style="{StaticResource BookDetailsTextBlockStyle}">Tytuł</TextBlock>
+                        <TextBlock Style="{StaticResource BookDetailsTextBlockStyle}">Autor</TextBlock>
+                        <TextBlock Style="{StaticResource BookDetailsTextBlockStyle}">Wydawca</TextBlock>
+                        <TextBlock Style="{StaticResource BookDetailsTextBlockStyle}">Data wydania</TextBlock>
+                        <TextBlock Style="{StaticResource BookDetailsTextBlockStyle}">Gatunek</TextBlock>
+                        <TextBlock Style="{StaticResource BookDetailsTextBlockStyle}">Język</TextBlock>
+                        <TextBlock Style="{StaticResource BookDetailsTextBlockStyle}">Cena</TextBlock>
+                        <TextBlock Style="{StaticResource BookDetailsTextBlockStyle}">Opis</TextBlock>
+					</StackPanel>
+					<StackPanel Grid.Column="1">
+                        <TextBlock Text="{Binding Title}" Style="{StaticResource BookDetailsTextBlockStyle}"/>
+                        <TextBlock Text="{Binding Author}" Style="{StaticResource BookDetailsTextBlockStyle}"/>
+                        <TextBlock Text="{Binding Publisher}" Style="{StaticResource BookDetailsTextBlockStyle}"/>
+                        <TextBlock Text="{Binding PublishDate}" Style="{StaticResource BookDetailsTextBlockStyle}"/>
+                        <TextBlock Text="{Binding Genre}" Style="{StaticResource BookDetailsTextBlockStyle}"/>
+                        <TextBlock Text="{Binding Language}" Style="{StaticResource BookDetailsTextBlockStyle}"/>
+                        <TextBlock Text="{Binding Price}" Style="{StaticResource BookDetailsTextBlockStyle}"/>
+                        <TextBlock Text="{Binding Description}" Style="{StaticResource BookDetailsTextBlockStyle}"/>
+					</StackPanel>
+					<StackPanel Grid.Column="0" Grid.Row="1">
+						<Button x:Name="ReturnToList" Tag="FromDetails" Click="ReturnToList_Click" Width="40" Height="40" Background="{StaticResource BlueButtonBackground}">
+							<StackPanel>
+								<Image Source="E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\return.png" Stretch="Fill"/>
+							</StackPanel>
+						</Button>
+					</StackPanel>
+				</Grid>
+			</DataTemplate>
+		</ListBox.ItemTemplate>
+	</ListBox>
+   <Wpf:WebView2 x:Key="WebView" Source="https://www.google.com" Width="700" Height="500" Loaded="WebView2_Loaded" IsVisibleChanged="WebView_VisibleChanged"/>
+	<!-- BookForm -->
+	<StackPanel x:Key="BookForm" Width="200" Visibility="Hidden">
+		<StackPanel>
+			<Label>Tytuł</Label>
+			<TextBox x:Name="Title" Validation.ErrorTemplate="{StaticResource TextBoxValidation}" Style="{StaticResource ListBoxItemStyle}">
+				<TextBox.Text>
+					<Binding Path="Title" UpdateSourceTrigger="LostFocus" Mode="TwoWay">
+					</Binding>
+				</TextBox.Text>
+			</TextBox>
+		</StackPanel>
+		<StackPanel>
+			<Label>Autor</Label>
+			<TextBox x:Name="Author" Validation.ErrorTemplate="{StaticResource TextBoxValidation}" Style="{StaticResource ListBoxItemStyle}">
+				<TextBox.Text>
+					<Binding Path="Author" UpdateSourceTrigger="LostFocus" Mode="TwoWay">
+					</Binding>
+				</TextBox.Text>
+			</TextBox>
+		</StackPanel>
+		<StackPanel>
+			<Label>Wydawca</Label>
+			<TextBox x:Name="Publisher" Validation.ErrorTemplate="{StaticResource TextBoxValidation}" Style="{StaticResource ListBoxItemStyle}">
+				<TextBox.Text>
+					<Binding Path="Publisher" UpdateSourceTrigger="LostFocus" Mode="TwoWay">
+					</Binding>
+				</TextBox.Text>
+			</TextBox>
+		</StackPanel>
+		<StackPanel>
+			<Label>Data wydania</Label>
+			<TextBox x:Name="PublishDate" Validation.ErrorTemplate="{StaticResource TextBoxValidation}" Style="{StaticResource ListBoxItemStyle}">
+				<TextBox.Text>
+					<Binding Path="PublishDate" UpdateSourceTrigger="LostFocus" Mode="TwoWay">
+					</Binding>
+				</TextBox.Text>
+			</TextBox>
+		</StackPanel>
+		<StackPanel>
+			<Label>Gatunek</Label>
+			<ComboBox x:Name="Genre" ItemsSource="{Binding Genre}" Style="{StaticResource ComboBoxItemStyle}">
+				<ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Style.Triggers>
+                            <Trigger Property="IsVisible" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                                <Setter Property="Foreground" Value="GreenYellow"/>
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter Property="Background" Value="Green"/>
+                                <Setter Property="Foreground" Value="GreenYellow"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+				</ComboBox.ItemContainerStyle>
+			</ComboBox>
+		</StackPanel>
+		<StackPanel>
+			<Label>Język</Label>
+			<TextBox x:Name="Language" Validation.ErrorTemplate="{StaticResource TextBoxValidation}" Style="{StaticResource ListBoxItemStyle}">
+				<TextBox.Text>
+					<Binding Path="Language" UpdateSourceTrigger="LostFocus" Mode="TwoWay">
+					</Binding>
+				</TextBox.Text>
+			</TextBox>
+		</StackPanel>
+		<StackPanel>
+			<Label>Cena</Label>
+			<TextBox x:Name="Price" Validation.ErrorTemplate="{StaticResource TextBoxValidation}" Style="{StaticResource ListBoxItemStyle}">
+				<TextBox.Text>
+					<Binding Path="Price" UpdateSourceTrigger="LostFocus" Mode="TwoWay">
+					</Binding>
+				</TextBox.Text>
+			</TextBox>
+		</StackPanel>
+		<StackPanel>
+			<Label>Opis</Label>
+			<TextBox x:Name="Description" Text="{Binding Description}" Height="100" Style="{StaticResource ListBoxItemStyle}"/>
+		</StackPanel>
+		<Button x:Name="ReturnToList" Tag="FromForm" Click="ReturnToList_Click" Width="40" Height="40" Background="{StaticResource BlueButtonBackground}"
+			MouseEnter="ReturnToList_MouseEnter" >
+			<StackPanel>
+				<Image Source="E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\return.png" Stretch="Fill"/>
+			</StackPanel>
+		</Button>
+	</StackPanel>
+	<Canvas x:Key="ValidationOverlay" Width="150" Height="150" Margin="100 0"></Canvas>
+</ResourceDictionary>

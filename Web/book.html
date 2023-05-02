@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body style="background: linear-gradient(0deg, rgba(160,170,181,1) 0%, rgba(209,214,219,1) 100%); height:450px">
+    <div>
+        <div id="main" style="float: left">
+            <img id="cover" src="file://E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\return.png"/>
+        </div>
+        <div id="thumbnails" style="width: 210px; float:left">
+            <div style="width: 100px; float:left">
+                <img id="thumbnail1" src="file://E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\none.png" width="100" height="100" onclick="changeImage(this)" />
+                <img id="thumbnail2" src="file://E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\none.png" width="100" height="100" onclick="changeImage(this)" />
+            </div>
+            <div style="width: 100px; float:left">
+                <img id="thumbnail3" src="file://E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\none.png" width="100" height="100" onclick="changeImage(this)" />
+                <img id="thumbnail4" src="file://E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\none.png" width="100" height="100" onclick="changeImage(this)" />
+            </div>
+            <div style="clear:both"/>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    let file_none = "file://E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\none.png";
+    function showImage(imgUrls) {
+        let urls = imgUrls.split("|");
+        let img = document.getElementById("cover");
+        img.src = urls[0];
+        resize(img);
+        document.getElementById("cover").src = img.src;
+        if (urls.length < 4) {
+            document.getElementById("thumbnail1").src = urls[0];
+            document.getElementById("thumbnail2").src = urls[0];
+            document.getElementById("thumbnail3").src = urls[0];
+            document.getElementById("thumbnail4").src = urls[0];
+        }
+        else {
+            document.getElementById("thumbnail1").src = urls[0];
+            document.getElementById("thumbnail2").src = urls[1];
+            document.getElementById("thumbnail3").src = urls[2];
+            document.getElementById("thumbnail4").src = urls[3];
+        }
+    }
+
+    function changeImage(image) {
+        let cover = document.getElementById("cover");
+        cover.src = image.src;
+        resize(cover);
+    }
+
+    function resize(image)
+    {
+        if (image.width > image.height) {
+            image.width = 250;
+        }
+        else {
+            image.height = 250;
+        }
+    }
+</script>
+</html>
