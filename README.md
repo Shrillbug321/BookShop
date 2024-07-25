@@ -7,9 +7,35 @@ Entity Framework, SQLite<br>
 
 Aplikacja okienkowa do zarządzania książkami. <br>
 Aplikacja jest bogato animowana i stylizowana, gdyż z jednym z celów było zapoznanie się z możliwościami multimedialnymi WPF-a.<br>
-Obrazki obecne w szczegółach książki są wyszukiwane w Internecie na podstawie tytułu. Więc jeśli pojawi się coś nieodpowiedniego, to wina Binga, a nie moja :)
+Obrazki obecne w szczegółach książki są wyszukiwane w Internecie na podstawie tytułu. Jeśli pojawi się coś nieodpowiedniego, to wina Binga, a nie moja :)
 
-**Uruchamianie**
-Pobieramy plik BookShop.exe z  i uruchamiamy.
+**Uruchamianie**<br>
+Pobieramy plik BookShop.exe z folderu publish i uruchamiamy.<br> Jeśli nie działa, to zainstaluj .NET 6 SDK.
 ## EN
-Single CRUD written in WPF.
+**Technologies**<br>
+C# 6.0<br>
+WPF, XAML, JavaScript<br>
+Entity Framework, SQLite<br>
+
+Window application to books management. <br>
+Application is richly animated and stylized, because one goal was to learn multimedia features of WPF.<br>
+Images in book details is searched in Internet by title. If appeared something unsuitable, it's Bing guilt, not my :)
+
+**Launching**<br>
+Download BookShop.exe from publish folder and run him.<br> If not work, install .NET 6 SDK.
+
+Strona główna<br>
+Main page<br>
+![img.png](readme/img.png)
+
+Szczegóły książki<br>
+Book details<br>
+![img_1.png](readme/img_1.png)
+
+Dodawanie książki<br>
+Book adding<br>
+![img_2.png](readme/img_2.png)
+
+Szczegóły książki<br>
+Book details<br>
+![img_3.png](readme/img_3.png)
