@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace BookShop
 {
-	public partial class MainWindow : Window
+	public partial class MainWindow
 	{
 		WebView2 WebView;
 		ListBox BooksList;
@@ -18,39 +18,42 @@ namespace BookShop
 		StackPanel BookForm;
 		Button AddBookButton;
 		private Canvas ValidationOverlay;
+
 		public MainWindow(BooksContext context)
 		{
 			InitializeComponent();
-			LinearGradientBrush gradient = new LinearGradientBrush 
+			Window.Background = new LinearGradientBrush
 			{
 				StartPoint = new Point(0, 0),
-				EndPoint = new Point(0,1),
+				EndPoint = new Point(0, 1),
 				GradientStops = new GradientStopCollection
 				{
-					new GradientStop
+					new()
 					{
 						Color = Colors.White,
 						Offset = 0,
 					},
-					new GradientStop
+					new()
 					{
 						Color = Colors.SlateGray,
 						Offset = 1.5,
 					}
 				}
 			};
-
-			Window.Background = gradient;
 			List<BookModel> books = context.Books.ToList();
+
 			BooksList = FindResource("BooksList") as ListBox;
 			BooksList.Name = "BooksList";
 			BooksList.ItemsSource = books;
+
 			BookDetails = FindResource("BookDetails") as ListBox;
 			BookDetails.Name = "BookDetails";
+
 			BookForm = FindResource("BookForm") as StackPanel;
 			BookForm.Name = "BookForm";
+
 			WebView = (WebView2)FindResource("WebView");
-			WebView.RenderTransform = new TranslateTransform(-50,-50);
+			WebView.RenderTransform = new TranslateTransform(-50, -50);
 
 			AddBookButton = (Button)FindResource("ShowBookForm_Add");
 			ValidationOverlay = (Canvas)FindResource("ValidationOverlay");
@@ -62,6 +65,7 @@ namespace BookShop
 			MainGrid.Children.Insert(3, BookForm);
 			MainGrid.Children.Insert(4, WebView);
 			MainGrid.Children.Insert(5, AddBookButton);
+			
 			BooksList.Visibility = Visibility.Visible;
 			BookDetails.Visibility = Visibility.Hidden;
 			BookForm.Visibility = Visibility.Hidden;
@@ -74,6 +78,5 @@ namespace BookShop
 			BookShopViewModel bse = BookShopViewModel.INSTANCE;
 			bse.Initialize(BooksList, BookDetails, context, BookForm, WebView, AddBookButton, ValidationOverlay);
 		}
-
 	}
 }

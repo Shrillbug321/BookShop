@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using BookShop.DataBase;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BookShop
@@ -14,7 +8,7 @@ namespace BookShop
 	/// <summary>
 	/// Interaction logic for App.xaml
 	/// </summary>
-	public partial class App : Application
+	public partial class App
 	{
 		private ServiceProvider _serviceProvider;
 		public App()
@@ -31,8 +25,7 @@ namespace BookShop
 
 		private void OnStartup(object s, StartupEventArgs e)
 		{
-			var mainWindow = _serviceProvider.GetService<MainWindow>();
-			mainWindow.Show();
+			_serviceProvider.GetService<MainWindow>().Show();
 		}
 	}
 }

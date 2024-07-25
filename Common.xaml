@@ -51,8 +51,9 @@
         <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
     </Style>
     <Storyboard x:Key="DeleteButtonAnimation">
-		<ColorAnimation Storyboard.TargetName="DeleteBook"
-			Storyboard.TargetProperty="Background"
-			From="{StaticResource RedButtonBackground}" To="Red" Duration="00:00:10"/>
+	    <!-- ReSharper disable once Xaml.InvalidResourceType -->
+	    <ColorAnimation Storyboard.TargetName="DeleteBook"
+	                    Storyboard.TargetProperty="Background"
+	                    From="{StaticResource RedButtonBackground}" To="Red" Duration="00:00:10"/>
 	</Storyboard>
 </ResourceDictionary>

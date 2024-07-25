@@ -4,9 +4,9 @@ namespace BookShop.Utils
 {
 	public static class Utils
 	{
-		public static async Task Wait(int milliseconds)
+		public static Task Wait(int milliseconds)
 		{
-			await Task.Delay(milliseconds);
+			return Task.Delay(milliseconds);
 		}
 	}
 }

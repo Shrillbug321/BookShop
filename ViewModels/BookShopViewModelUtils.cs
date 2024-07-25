@@ -3,6 +3,7 @@ using BookShop.Validators;
 using BookShop.Views;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,22 +11,31 @@ namespace BookShop
 {
 	public partial class BookShopViewModel
 	{
+		private Dictionary<string, int> errorsMargins = new()
+		{
+			{"Title", 0},
+			{"Author",50},
+			{"Publisher",100},
+			{"Data",150},
+			{"Language",250},
+			{"Price",300}
+		};
 		private void enterValueToForm()
 		{
 			UIElementCollection sp = BookForm.Children;
-			string[] values = { Book.Title, Book.Author, Book.Publisher, Book.PublishDate.ToString()[..10], Book.Genre.ToString(), Book.Language, Book.Price.ToString(), Book.Description };
+			string[] values =
+			{
+				Book.Title, Book.Author, Book.Publisher, Book.PublishDate.ToString(CultureInfo.CurrentCulture)[..10],
+				Book.Genre.ToString(), Book.Language, Book.Price.ToString(CultureInfo.CurrentCulture), Book.Description
+			};
 			for (int i = 0; i < sp.Count - 2; i++)
 			{
 				if (sp[i] is Button) break;
-				var a = ((StackPanel)sp[i]).Children[1];
+				UIElement? a = ((StackPanel)sp[i]).Children[1];
 				if (a is TextBox box)
-				{
 					box.Text = values[i];
-				}
-				else if (a is ComboBox)
-				{
+				if (a is ComboBox)
 					getGenres();
-				}
 			}
 		}
 
@@ -36,9 +46,8 @@ namespace BookShop
 			{
 				ComboBoxItem item = new ComboBoxItem { Content = genre };
 				if (Book.Genre.ToString() == genre)
-				{
 					item.IsSelected = true;
-				}
+
 				cb.Items.Add(item);
 			}
 		}
@@ -54,7 +63,7 @@ namespace BookShop
 			Book.Price = decimal.Parse(((TextBox)((StackPanel)form[6]).Children[1]).Text);
 			Book.Description = ((TextBox)((StackPanel)form[7]).Children[1]).Text;
 		}
-		
+
 		private void clearForm(UIElementCollection form)
 		{
 			((TextBox)((StackPanel)form[0]).Children[1]).Text = "";
@@ -77,66 +86,49 @@ namespace BookShop
 			UIElementCollection a = BookForm.Children;
 			StackPanel[] stackPanels = new StackPanel[8];
 			for (int i = 0; i < 8; i++)
-			{
 				stackPanels[i] = (StackPanel)a[i];
-			}
+
 			BookFormValidator validator = new(stackPanels);
 			if (validator.Validate())
-			{
 				return true;
-			}
-			else
+			
+			validationOverlay.Children.Clear();
+			Dictionary<string, string> errors = validator.NotValidElements;
+
+			foreach (KeyValuePair<string,int> margin in errorsMargins)
 			{
-				validationOverlay.Children.Clear();
-				Dictionary<string, string> errors = validator.NotValidElements;
-				if (errors.ContainsKey("Title"))
-				{
-					validationOverlay.Children.Add(Controls.CreateErrorControl(errors["Title"], 0));
-				}
-				if (errors.ContainsKey("Author"))
-				{
-					validationOverlay.Children.Add(Controls.CreateErrorControl(errors["Author"], 50));
-				}
-				if (errors.ContainsKey("Publisher"))
-				{
-					validationOverlay.Children.Add(Controls.CreateErrorControl(errors["Publisher"], 100));
-				}
-				if (errors.ContainsKey("Data"))
-				{
-					validationOverlay.Children.Add(Controls.CreateErrorControl(errors["Data"], 150));
-				}
-				if (errors.ContainsKey("Language"))
-				{
-					validationOverlay.Children.Add(Controls.CreateErrorControl(errors["Language"], 250));
-				}
-				if (errors.ContainsKey("Price"))
-				{
-					validationOverlay.Children.Add(Controls.CreateErrorControl(errors["Price"], 300));
-				}
-				return false;
+				if (errors.TryGetValue(margin.Key, out string? error))
+					validationOverlay.Children.Add(Controls.CreateErrorControl(error, margin.Value));
 			}
+
+			return false;
 		}
 
 		private void DeleteBook_MouseLeftButtonDown(object sender, RoutedEventArgs e)
 		{
 			Animations.DeleteButtonAnimation_Down((Button)sender);
 		}
+
 		private void DeleteBook_MouseLeftButtonUp(object sender, RoutedEventArgs e)
 		{
 			Animations.DeleteButtonAnimation_Up((Button)sender);
 		}
+
 		private void EditBook_MouseLeftButtonDown(object sender, RoutedEventArgs e)
 		{
 			Animations.EditButtonAnimation_Down((Button)sender);
 		}
+
 		private void EditBook_MouseLeftButtonUp(object sender, RoutedEventArgs e)
 		{
 			Animations.EditButtonAnimation_Up((Button)sender);
 		}
+
 		private void AddBook_MouseLeftButtonDown(object sender, RoutedEventArgs e)
 		{
 			Animations.AddButtonAnimation_Down((Button)sender);
 		}
+
 		private void AddBook_MouseLeftButtonUp(object sender, RoutedEventArgs e)
 		{
 			Animations.AddButtonAnimation_Up((Button)sender);

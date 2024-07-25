@@ -6,109 +6,98 @@ namespace BookShop.Validators
 {
 	public class BookFormValidator
 	{
-		private StackPanel[] StackPanels;
+		private StackPanel[] stackPanels;
 		public Dictionary<string, string> NotValidElements { get; set; }
+
 		public BookFormValidator(StackPanel[] stackPanels)
 		{
-			StackPanels = stackPanels;
+			this.stackPanels = stackPanels;
 			NotValidElements = new Dictionary<string, string>();
 		}
+
 		public bool Validate()
 		{
 			NotValidElements = new Dictionary<string, string>();
-			Title(StackPanels[0]);
-			Author(StackPanels[1]);
-			Publisher(StackPanels[2]);
-			Data(StackPanels[3]);
-			Language(StackPanels[5]);
-			Price(StackPanels[6]);
-			if (NotValidElements.Count == 0)
-				return true;
-			return false;
+			Title(stackPanels[0]);
+			Author(stackPanels[1]);
+			Publisher(stackPanels[2]);
+			Data(stackPanels[3]);
+			Language(stackPanels[5]);
+			Price(stackPanels[6]);
+			return NotValidElements.Count == 0;
 		}
-		public bool Title(StackPanel title)
+
+		private void Title(StackPanel title)
 		{
-			string text = ((TextBox)title.Children[1]).Text;
+			if (string.IsNullOrEmpty(TextFromStackPanel(title)))
+				NotValidElements.Add("Title", "Nie wpisano tytułu");
+		}
+
+		private void Author(StackPanel author)
+		{
+			string text = TextFromStackPanel(author);
 			if (string.IsNullOrEmpty(text))
 			{
-				NotValidElements.Add("Title", "Nie wpisano tyułu");
-				return false;
+				NotValidElements.Add("Author", "Nie wpisano autora");
+				return;
 			}
-			return true;
-		}
-		public bool Author(StackPanel author)
-		{
-			string text = ((TextBox)author.Children[1]).Text;
-			if (string.IsNullOrEmpty(text))
-			{
-				NotValidElements.Add("Author","Nie wpisano autora");
-				return false;
-			}
+
 			if (!text.Contains(' '))
-			{
-				NotValidElements.Add("Author","Zapomniano wpisać imię lub nazwisko");
-				return false;
-			}
-			return true;
+				NotValidElements.Add("Author", "Zapomniano wpisać imię lub nazwisko");
 		}
-		public bool Publisher(StackPanel publisher)
+
+		private void Publisher(StackPanel publisher)
 		{
-			string text = ((TextBox)publisher.Children[1]).Text;
-			if (string.IsNullOrEmpty(text))
-			{
+			if (string.IsNullOrEmpty(TextFromStackPanel(publisher)))
 				NotValidElements.Add("Publisher", "Nie wpisano wydawcy");
-				return false;
-			}
-			return true;
 		}
-		public bool Data(StackPanel data)
+
+		private void Data(StackPanel data)
 		{
 			string pattern = @"(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[1-2]).\d{4}";
 			Regex regex = new Regex(pattern);
-			string text = ((TextBox)data.Children[1]).Text;
+			string text = TextFromStackPanel(data);
 			if (string.IsNullOrEmpty(text))
 			{
-				NotValidElements.Add("Data","Nie wpisano daty");
-				return false;
+				NotValidElements.Add("Data", "Nie wpisano daty");
+				return;
 			}
+
 			if (!regex.IsMatch(text))
-			{
-				NotValidElements.Add("Data","Proszę wpisać datę w formacie DD.MM.RRRR");
-				return false;
-			}
-			return true;
+				NotValidElements.Add("Data", "Proszę wpisać datę w formacie DD.MM.RRRR");
 		}
-		public bool Language(StackPanel language)
+
+		private void Language(StackPanel language)
 		{
-			string text = ((TextBox)language.Children[1]).Text;
+			string text = TextFromStackPanel(language);
 			if (string.IsNullOrEmpty(text))
 			{
-				NotValidElements.Add("Language","Nie wpisano języka");
-				return false;
+				NotValidElements.Add("Language", "Nie wpisano języka");
+				return;
 			}
+
 			if (text.Length != 2)
-			{
-				NotValidElements.Add("Language","Proszę wpisać dwuliterowy kod");
-				return false;
-			}
-			return true;
+				NotValidElements.Add("Language", "Proszę wpisać dwuliterowy kod");
 		}
-		public bool Price(StackPanel price)
+
+		private void Price(StackPanel price)
 		{
-			string pattern = @"^[+-]?[0-9]{1,3}(?:.?[0-9]{3})*(?:\,[0-9]{2})?$";
+			const string pattern = @"^[+-]?[0-9]{1,3}(?:.?[0-9]{3})*(?:\,[0-9]{2})?$";
 			Regex regex = new Regex(pattern);
-			string text = ((TextBox)price.Children[1]).Text;
+			string text = TextFromStackPanel(price);
 			if (string.IsNullOrEmpty(text))
 			{
-				NotValidElements.Add("Price","Nie wpisano ceny");
-				return false;
+				NotValidElements.Add("Price", "Nie wpisano ceny");
+				return;
 			}
+
 			if (!regex.IsMatch(text))
-			{
-				NotValidElements.Add("Price","Proszę wpisać cenę w formacie XXX lub XXX,XX");
-				return false;
-			}
-			return true;
+				NotValidElements.Add("Price", "Proszę wpisać cenę w formacie XXX lub XXX,XX");
+		}
+
+		private string TextFromStackPanel(StackPanel stackPanel)
+		{
+			return ((TextBox)stackPanel.Children[1]).Text;
 		}
 	}
 }

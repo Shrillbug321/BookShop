@@ -6,7 +6,7 @@
         mc:Ignorable="d"
 		Title="Księgarnia" Height="600" Width="800" x:Name="Window" 
         ResizeMode="NoResize"
-        Icon="E:\Dokumenty\Studia\Semestr VI\ŚPAWiM\Projekt\img\Icon2.ico">
+        Icon="E:\Dokumenty\Studia\Tymczasowy\BookShop\img\Icon2.ico">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -1,6 +1,5 @@
 ﻿using BookShop.DataBase;
 using BookShop.Models;
-using BookShop.Validators;
 using BookShop.Views;
 using HtmlAgilityPack;
 using Microsoft.Web.WebView2.Wpf;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,26 +24,12 @@ namespace BookShop
 		private WebView2 WebView;
 		private Button AddBookButton;
 		private Canvas validationOverlay;
-		public static BookShopViewModel INSTANCE
-		{
-			get
-			{
-				return instance;
-			}
-			set
-			{
-				instance = value;
-			}
-		}
+		public static BookShopViewModel INSTANCE { get; set; }
 		public BookShopViewModel()
 		{
 			if (INSTANCE != null)
 				return;
-			else
-			{
-				INSTANCE = this;
-			}
-			
+			INSTANCE = this;
 		}
 
 		public void Initialize(ListBox booksList, ListBox bookDetails, BooksContext context,
@@ -76,10 +60,7 @@ namespace BookShop
 
 		private void BooksList_VisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			if (BooksList.Visibility == Visibility.Visible)
-				AddBookButton.Visibility = Visibility.Visible;
-			else
-				AddBookButton.Visibility = Visibility.Hidden;
+			AddBookButton.Visibility = BooksList.Visibility == Visibility.Visible ? Visibility.Visible : Visibility.Hidden;
 		}
 
 		private void ShowBookForm_Edit_Click(object sender, RoutedEventArgs e)
@@ -108,33 +89,31 @@ namespace BookShop
 		private void DeleteBook_Click(object sender, RoutedEventArgs e)
 		{
 			Book = (BookModel)((ListBoxItem)BooksList.ContainerFromElement((Button)sender)).Content;
-			string areYouSure = String.Format("Czy na pewno chcesz usunąć {0}?", Book.Title);
-			if (MessageBox.Show(areYouSure, "Potwierdź usunięcie", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-			{
-				context.Books.Remove(Book);
-				context.SaveChanges();
-				refreshBooksList();
-			}
+			string areYouSure = $"Czy na pewno chcesz usunąć {Book.Title}?";
+			if (MessageBox.Show(areYouSure, "Potwierdź usunięcie", MessageBoxButton.YesNo) ==
+			    MessageBoxResult.No) return;
+			context.Books.Remove(Book);
+			context.SaveChanges();
+			refreshBooksList();
 		}
 		#endregion
 		#region BookDetails
 		private async void WebView2_Loaded(object sender, RoutedEventArgs e)
 		{
 			await WebView.EnsureCoreWebView2Async();
-			Uri uri = new Uri(string.Format("file:///E:/Dokumenty/Studia/Semestr VI/ŚPAWiM/Projekt/Web/book.html"));
-			WebView.Source = uri;
+			WebView.Source = new Uri("file:///E:/Dokumenty/Studia/Tymczasowy/BookShop/Web/book.html");
 		}
 
 		private async void WebView_VisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (WebView.Visibility == Visibility.Hidden) return;
-			WebClient html = new WebClient();
-			string url = string.Format("https://www.bing.com/images/search?q={0}&first=1&tsc=ImageHoverTitle", Book.Title);
-			var b = html.DownloadData(url);
-			var a = Encoding.UTF8.GetString(b);
+			WebClient html = new();
+			string url = string.Format($"https://www.bing.com/images/search?q={Book.Title}&first=1&tsc=ImageHoverTitle");
+			byte[] b = html.DownloadData(url);
+			string a = Encoding.UTF8.GetString(b);
 			HtmlDocument doc = new HtmlDocument();
 			doc.LoadHtml(a);
-			var images = doc.DocumentNode.SelectNodes("//img");
+			HtmlNodeCollection? images = doc.DocumentNode.SelectNodes("//img");
 			string imagesUrls = "";
 			for (int i = 8; i < 12; i++)
 			{
@@ -145,7 +124,7 @@ namespace BookShop
 				}
 				imagesUrls += images[i].Attributes["src2"].Value+"|";
 			}
-			await WebView.CoreWebView2.ExecuteScriptAsync("showImage('" + imagesUrls.ToString() + " ')");
+			await WebView.CoreWebView2.ExecuteScriptAsync($"showImage('{imagesUrls}')");
 		}
 
 		private void BookDetails_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -165,6 +144,7 @@ namespace BookShop
 				WebView.Visibility = Visibility.Hidden;
 				Animations.MoveX(BooksList, 480, 0, 0.5f);
 			}
+			
 			if (button.Tag.ToString() == "FromForm")
 			{
 				Animations.MoveY(BookForm, 0, 480, 0.5f);

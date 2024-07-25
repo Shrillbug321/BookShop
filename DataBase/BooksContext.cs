@@ -11,8 +11,8 @@ namespace BookShop.DataBase
 
         public BooksContext(DbContextOptions<BooksContext> options) : base(options)
         {
-			/*Database.EnsureDeleted();
-			Database.EnsureCreated();*/
+			Database.EnsureDeleted();
+			Database.EnsureCreated();
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,11 +20,12 @@ namespace BookShop.DataBase
 			modelBuilder.Entity<BookModel>().HasData(getBooks());
 			base.OnModelCreating(modelBuilder);
 		}
+		
 		private List<BookModel> getBooks()
 		{
 			List<BookModel> books = new()
 			{
-				new BookModel()
+				new BookModel
 				{
 					Id = 1,
 					Title = "Harry Potter i Kamień Filzoficzny",
@@ -36,7 +37,7 @@ namespace BookShop.DataBase
 					Price = 25.00M,
 					Description = "Harry dostaje list z Hogwartu."
 				},
-				new BookModel()
+				new BookModel
 				{
 					Id = 2,
 					Title = "Książę i Żebrak",
